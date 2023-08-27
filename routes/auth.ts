@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import jwtVerify from "../middleware/jwtVerify";
 
 import { PrismaClient } from "@prisma/client";
+import { generateRandomBigHead } from "../util";
 const prisma = new PrismaClient();
 
 const router = Router();
@@ -57,6 +58,7 @@ router.post("/login", async (req, res) => {
 // User Register
 router.post("/register", async (req, res) => {
   try {
+    const randomAvatar = generateRandomBigHead();
     const existUser = await prisma.user.findFirst({
       where: {
         OR: [{ email: req.body.email }, { username: req.body.username }],
@@ -74,6 +76,7 @@ router.post("/register", async (req, res) => {
       data: {
         ...req.body,
         password: hasehdPass,
+        avatar: randomAvatar,
       },
     });
 
@@ -141,6 +144,53 @@ router.get("/logout", jwtVerify, async (req, res) => {
   res
     .status(200)
     .json({ msg: "User logged out successfully", user: null, token: "" });
+});
+
+// Get Single User
+router.get("/user/:id", jwtVerify, async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) return res.status(404).json({ msg: "User doen't exist" });
+
+    const { password, ...rest } = user;
+    return res.status(200).json({ user: rest });
+  } catch (error) {
+    let msg = "An unknown error occured.";
+    if (error instanceof Error) msg = error.message;
+    return res.status(500).json({ msg });
+  }
+});
+
+// Update User
+router.post("/user", jwtVerify, async (req, res) => {
+  try {
+    if (req.body.id !== req.user || !req.user) {
+      return res.status(403).json({ msg: "You are not authorized." });
+    }
+    const userExist = await prisma.user.findUnique({
+      where: { id: req.user as string },
+    });
+    if (!userExist) return res.status(404).json({ msg: "User not found" });
+    const { id, email, username, ...rest } = req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user as string },
+      data: {
+        ...rest,
+      },
+    });
+    return res.status(201).json({ msg: "User updated successfully" });
+  } catch (error) {
+    let msg = "An unknown error occured.";
+    if (error instanceof Error) msg = error.message;
+    return res.status(500).json({ msg });
+  }
 });
 
 export default router;

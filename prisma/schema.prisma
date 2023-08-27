@@ -17,5 +17,9 @@ model User {
   username String @unique
   password String
   createdAt DateTime @default(now())
+  avatar Json
+  bio String?
+  url String?
+  phone String?
 }
 
