@@ -10,16 +10,116 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// model User {
+//   id    String     @id @default(uuid())
+//   email String  @unique
+//   name  String
+//   username String @unique
+//   password String
+//   createdAt DateTime @default(now())
+//   avatar Json
+//   bio String?
+//   url String?
+//   phone String?
+// }
+
+// model Route {
+//   id String @id @default(uuid())
+//   title String
+//   published Boolean
+//   lastUpdated String
+//   createdAt DateTime @default(now())
+//   flow Json
+// }
+
+// model User {
+//   id        String    @id @default(uuid())
+//   email     String    @unique
+//   name      String
+//   username  String    @unique
+//   password  String
+//   createdAt DateTime  @default(now())
+//   avatar    Json
+//   bio       String?
+//   url       String?
+//   phone     String?
+// }
+
+// model Route {
+//   id          String     @id @default(uuid())
+//   title       String
+//   flow        Json
+//   published   Boolean
+//   lastUpdated String
+//   createdAt   DateTime   @default(now())
+
+//   comments    Comment[]
+//   routeLikes  RouteLike[]
+// }
+
+// model Comment {
+//   id        String    @id @default(uuid())
+//   text      String
+//   createdAt DateTime  @default(now())
+//   userId    String
+//   routeId   String
+//   route Route @relation(fields: [routeId], references: [id])
+// }
+
+// model RouteLike {
+//   id        String    @id @default(uuid())
+//   userId    String
+//   routeId   String
+//   createdAt DateTime  @default(now())
+//   route     Route      @relation(fields: [routeId], references: [id])
+// }
+
+
 model User {
-  id    String     @id @default(uuid())
-  email String  @unique
-  name  String
-  username String @unique
-  password String
-  createdAt DateTime @default(now())
-  avatar Json
-  bio String?
-  url String?
-  phone String?
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  avatar    Json
+  bio       String?
+  url       String?
+  phone     String?
+  routes    Route[]
+  comments  Comment[]
+  likes     RouteLike[]
 }
 
+model Route {
+  id          String     @id @default(uuid())
+  title       String
+  flow        Json
+  published   Boolean
+  lastUpdated String
+  createdAt   DateTime   @default(now())
+
+  comments    Comment[]
+  likes       RouteLike[]
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id        String    @id @default(uuid())
+  text      String
+  createdAt DateTime  @default(now())
+  userId    String
+  routeId   String
+  route     Route     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model RouteLike {
+  id        String    @id @default(uuid())
+  userId    String
+  routeId   String
+  createdAt DateTime  @default(now())
+  route     Route     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id])
+}
