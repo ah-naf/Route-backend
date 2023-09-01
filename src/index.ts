@@ -5,6 +5,7 @@ import express from "express";
 const prisma = new PrismaClient();
 
 import AuthRoute from "../routes/auth";
+import RoutePostRoute from '../routes/route'
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 );
 
 app.use("/api/auth", AuthRoute);
+app.use("/api/route", RoutePostRoute);
 
 const PORT = process.env.PORT || 5000;
 
