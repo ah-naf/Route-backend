@@ -50,6 +50,9 @@ router.get("/", jwtVerify, async (req, res) => {
       where: {
         userId: req.user,
       },
+      orderBy: {
+        updatedAt: 'desc'
+      }
     });
     return res.status(200).json({ routes });
   } catch (error) {
@@ -85,10 +88,35 @@ router.get("/:id", async (req, res) => {
       },
       include: {
         comments: true,
-        likes: true
-      }
+        likes: true,
+      },
     });
-    return res.status(200).json({ route });
+
+    const suggestion = await prisma.route.findMany({
+      where: {
+        published: true,
+        id: { not: req.params.id },
+      },
+      orderBy: {
+        likes: {
+          _count: "desc",
+        },
+      },
+      include: {
+        likes: true,
+        comments: true,
+        user: {
+          select: {
+            username: true,
+            email: true,
+            name: true,
+          },
+        },
+      },
+      take: 5,
+    });
+
+    return res.status(200).json({ route, suggestion });
   } catch (error) {
     let msg = "An unknown error occured.";
     if (error instanceof Error) msg = error.message;
