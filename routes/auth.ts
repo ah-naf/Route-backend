@@ -147,7 +147,7 @@ router.get("/logout", jwtVerify, async (req, res) => {
 });
 
 // Get Single User
-router.get("/user/:id", jwtVerify, async (req, res) => {
+router.get("/user/:id", async (req, res) => {
   try {
     const userId = req.params.id;
     const user = await prisma.user.findUnique({

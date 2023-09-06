@@ -51,8 +51,8 @@ router.get("/", jwtVerify, async (req, res) => {
         userId: req.user,
       },
       orderBy: {
-        updatedAt: 'desc'
-      }
+        updatedAt: "desc",
+      },
     });
     return res.status(200).json({ routes });
   } catch (error) {
@@ -117,6 +117,29 @@ router.get("/:id", async (req, res) => {
     });
 
     return res.status(200).json({ route, suggestion });
+  } catch (error) {
+    let msg = "An unknown error occured.";
+    if (error instanceof Error) msg = error.message;
+    console.log(msg);
+    return res.status(500).json({ msg });
+  }
+});
+
+// Get all route for a specific user
+router.get("/user/:id", async (req, res) => {
+  try {
+    const userExist = await prisma.user.findUnique({
+      where: { id: req.params.id },
+    });
+    if (!userExist) throw new Error("User doesnt exist");
+
+    const routes = await prisma.route.findMany({
+      where: { userId: req.params.id },
+      orderBy: {updatedAt: 'desc'},
+      include: { comments: true, likes: true },
+    });
+
+    return res.status(200).json({ routes });
   } catch (error) {
     let msg = "An unknown error occured.";
     if (error instanceof Error) msg = error.message;
