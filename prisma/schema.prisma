@@ -89,6 +89,7 @@ model User {
   routes    Route[]
   comments  Comment[]
   likes     RouteLike[]
+  bookmarks Bookmark[]
 }
 
 model Route {
@@ -98,9 +99,12 @@ model Route {
   published   Boolean
   updatedAt   DateTime   @updatedAt
   createdAt   DateTime   @default(now())
+  time Int?
+  cost Int?
 
   comments    Comment[]
   likes       RouteLike[]
+  bookmarks   Bookmark[]
   userId      String
   user        User       @relation(fields: [userId], references: [id])
 }
@@ -122,4 +126,13 @@ model RouteLike {
   createdAt DateTime  @default(now())
   route     Route     @relation(fields: [routeId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id])
+}
+
+model Bookmark {
+  id String @id @default(uuid())
+  userId String
+  routeId String
+  createdAt DateTime @default(now())
+  route Route @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 }
