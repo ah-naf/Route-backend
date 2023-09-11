@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
+import jwtVerify from "../middleware/jwtVerify";
 const prisma = new PrismaClient();
 
 const router = Router();
@@ -25,5 +26,7 @@ router.get("/", async (req, res) => {
     return res.status(500).json({ msg });
   }
 });
+
+
 
 export default router;

@@ -5,6 +5,7 @@ import express from "express";
 const prisma = new PrismaClient();
 
 import AuthRoute from "../routes/auth";
+import BookmarkRoute from "../routes/bookmark";
 import ReviewRoute from "../routes/review";
 import RoutePostRoute from "../routes/route";
 import SearchRoute from "../routes/search";
@@ -24,6 +25,7 @@ app.use("/api/auth", AuthRoute);
 app.use("/api/route", RoutePostRoute);
 app.use("/api/review", ReviewRoute);
 app.use("/api/search", SearchRoute);
+app.use("/api/bookmark", BookmarkRoute);
 
 const PORT = process.env.PORT || 5000;
 

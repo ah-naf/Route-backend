@@ -135,7 +135,7 @@ router.get("/user/:id", async (req, res) => {
 
     const routes = await prisma.route.findMany({
       where: { userId: req.params.id },
-      orderBy: {updatedAt: 'desc'},
+      orderBy: { updatedAt: "desc" },
       include: { comments: true, likes: true },
     });
 
@@ -147,5 +147,7 @@ router.get("/user/:id", async (req, res) => {
     return res.status(500).json({ msg });
   }
 });
+
+
 
 export default router;
