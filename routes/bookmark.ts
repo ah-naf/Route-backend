@@ -102,6 +102,23 @@ router.get("/", jwtVerify, async (req, res) => {
   }
 });
 
-
+// Delete all bookmark
+router.delete("/", jwtVerify, async (req, res) => {
+  try {
+    await prisma.bookmark.deleteMany({
+      where: {
+        userId: req.user,
+      },
+    });
+    return res
+      .status(200)
+      .json({ msg: "All bookmark cleared.", userId: req.user });
+  } catch (error) {
+    let msg = "An unknown error occured.";
+    if (error instanceof Error) msg = error.message;
+    console.log(msg);
+    return res.status(500).json({ msg });
+  }
+});
 
 export default router;
