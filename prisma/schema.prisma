@@ -90,6 +90,7 @@ model User {
   comments  Comment[]
   likes     RouteLike[]
   bookmarks Bookmark[]
+  review Review[]
 }
 
 model Route {
@@ -134,5 +135,19 @@ model Bookmark {
   routeId String
   createdAt DateTime @default(now())
   route Route @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id String @id @default(uuid())
+  title String @default("")
+  userId String
+  createdAt DateTime @default(now())
+  place String
+  cover_pic String?
+  desc String
+  rating Float
+  contents Json[]
+  tags String[]
   user User @relation(fields: [userId], references: [id])
 }

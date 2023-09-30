@@ -9,6 +9,7 @@ import fs from "fs";
 import AuthRoute from "../routes/auth";
 import BookmarkRoute from "../routes/bookmark";
 import ReviewRoute from "../routes/review";
+import PlaceReviewRoute from "../routes/placeReview";
 import RoutePostRoute from "../routes/route";
 import SearchRoute from "../routes/search";
 
@@ -47,6 +48,7 @@ app.use("/api/route", RoutePostRoute);
 app.use("/api/review", ReviewRoute);
 app.use("/api/search", SearchRoute);
 app.use("/api/bookmark", BookmarkRoute);
+app.use("/api/placeReview", PlaceReviewRoute);
 
 app.post("/upload", upload.single("image"), async (req, res) => {
   if(req.file) {
