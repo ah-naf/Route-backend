@@ -61,4 +61,28 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const place = await prisma.review.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+    return res.status(200).json({ place });
+  } catch (error) {
+    let msg = "An unknown error occured.";
+    if (error instanceof Error) msg = error.message;
+    console.log(msg);
+    return res.status(500).json({ msg });
+  }
+});
+
 export default router;
