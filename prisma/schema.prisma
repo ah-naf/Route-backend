@@ -146,6 +146,7 @@ model Review {
   place String
   cover_pic String?
   desc String
+  updatedAt   DateTime   @updatedAt @default(now())
   rating Float
   contents Json[]
   tags String[]
