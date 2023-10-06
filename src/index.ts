@@ -8,8 +8,8 @@ const prisma = new PrismaClient();
 import fs from "fs";
 import AuthRoute from "../routes/auth";
 import BookmarkRoute from "../routes/bookmark";
-import ReviewRoute from "../routes/review";
 import PlaceReviewRoute from "../routes/placeReview";
+import ReviewRoute from "../routes/review";
 import RoutePostRoute from "../routes/route";
 import SearchRoute from "../routes/search";
 
@@ -28,14 +28,16 @@ const upload = multer({ storage });
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   bodyParser.urlencoded({
     extended: true,
+    limit: "50mb",
   })
 );
 app.use(cookieParser());
 app.use(express.json());
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -51,10 +53,10 @@ app.use("/api/bookmark", BookmarkRoute);
 app.use("/api/placeReview", PlaceReviewRoute);
 
 app.post("/upload", upload.single("image"), async (req, res) => {
-  if(req.file) {
+  if (req.file) {
     return res
-    .status(200)
-    .json(`http://localhost:5000/upload/${req.file.filename}`);
+      .status(200)
+      .json(`http://localhost:5000/upload/${req.file.filename}`);
   }
 });
 
