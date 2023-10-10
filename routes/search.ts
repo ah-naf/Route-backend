@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 
 const router = Router();
 
+
+// Search for route
 router.get("/", async (req, res) => {
   try {
     const { source, destination } = req.query;

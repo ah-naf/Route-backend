@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 const router = Router();
 
+// Like or dislike a route
 router.post("/like", jwtVerify, async (req, res) => {
   try {
     const { routeId } = req.body;
@@ -54,6 +55,7 @@ router.post("/like", jwtVerify, async (req, res) => {
   }
 });
 
+// Comment on a route
 router.post("/comment", jwtVerify, async (req, res) => {
   try {
     const { routeId, text } = req.body;
@@ -90,6 +92,7 @@ router.post("/comment", jwtVerify, async (req, res) => {
   }
 });
 
+// Get all the comment for a specific route
 router.get("/comment/:id", async (req, res) => {
   try {
     if (!req.params.id) throw new Error("Route doesnt exist");
@@ -122,6 +125,7 @@ router.get("/comment/:id", async (req, res) => {
   }
 });
 
+// Delete a comment
 router.delete("/comment/:id", jwtVerify, async (req, res) => {
   try {
     if (!req.params.id) throw new Error("Comment doesnt exist");

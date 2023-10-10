@@ -9,7 +9,7 @@ const router = Router();
 router.post("/", jwtVerify, async (req, res) => {
   try {
     const { id, title, flow, published, userId } = req.body;
-    console.log(title);
+    
     if (userId !== req.user)
       return res.status(403).json({ msg: "You are not authorized" });
     if (!id || !title || !flow || !userId)

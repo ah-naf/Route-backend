@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 
 const router = Router();
 
+
+// Add a new place review
 router.post("/", jwtVerify, async (req, res) => {
   try {
     await prisma.review.create({
@@ -22,6 +24,7 @@ router.post("/", jwtVerify, async (req, res) => {
   }
 });
 
+// Update a place review
 router.post("/:id", jwtVerify, async (req, res) => {
   try {
     if (!req.body.userId || req.body.userId !== req.user)
@@ -45,6 +48,7 @@ router.post("/:id", jwtVerify, async (req, res) => {
   }
 });
 
+// Get All the place names
 router.get("/place-names", async (req, res) => {
   try {
     const places = await prisma.review.findMany({
@@ -63,6 +67,7 @@ router.get("/place-names", async (req, res) => {
   }
 });
 
+// Get all the place review
 router.get("/", async (req, res) => {
   try {
     const places = await prisma.review.findMany({
@@ -84,6 +89,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get a single place review
 router.get("/:id", async (req, res) => {
   try {
     const place = await prisma.review.findUnique({
@@ -109,6 +115,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Delete a place Review
 router.delete("/:id", jwtVerify, async (req, res) => {
   try {
     if (!req.params.id) throw new Error("Place review doesnt exist");
